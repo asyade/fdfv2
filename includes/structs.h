@@ -31,6 +31,7 @@ typedef struct		s_map
 
 typedef struct		s_render
 {
+	int				fill;
 	int				sl;
 	int				end;
 	int				bpx;

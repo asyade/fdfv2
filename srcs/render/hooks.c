@@ -2,10 +2,14 @@
 
 int    key_scale(int key, t_render *r)
 {
-    if (key == 116)
+    if (key == 69)
         apply_scale(r->map, SCALE_VEL);
-    else if (key == 121)
+    else if (key == 78)
         apply_scale(r->map, SCALE_VEL_OUT);
+    else if (key == 115)
+        apply_height(r->map, HEIGHT_VEL);
+    else if (key == 119)
+        apply_height(r->map, HEIGHT_VEL);
     else
         return (0);
     return (1);
@@ -13,7 +17,6 @@ int    key_scale(int key, t_render *r)
 
 int    key_move(int key, t_render *r)
 {
-    (void)r;
     int vel;
 
     vel = WIN_WIDTH / ((r->map->width + r->map->height) / 4);
@@ -25,6 +28,8 @@ int    key_move(int key, t_render *r)
         r->origin.y += vel;
     else if (key == 125)//down
         r->origin.y -= vel;
+    else if (key == 53)
+        r->fill = (r->fill) ? 0 : 1;
     else
         return (key_scale(key, r));
     return (1);

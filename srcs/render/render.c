@@ -31,7 +31,7 @@ void			scale_def(t_map *map)
 
 void			pose_def(t_render *render)
 {
-
+	(void)render;
 }
 
 void			apply_scale(t_map *map, double del)
@@ -52,9 +52,10 @@ void			apply_scale(t_map *map, double del)
 	}
 }
 
-void			get_limits(t_map *map)
+void			get_limits(t_render *r)
 {
-	(void)map;
+	r->origin.x = (((WIN_WIDTH % r->map->scale) / 2) + (r->map->width * r->map->scale));
+	r->origin.y = (((WIN_HEIGHT % r->map->scale) / 2) + (r->map->height * r->map->scale));
 }
 
 void        apply_matrice(t_render *render, int y, int to)
@@ -78,12 +79,26 @@ void        apply_matrice(t_render *render, int y, int to)
 	render->flags &= ~(F_UPROT | F_UPORIGIN);
 }
 
+
+int			get_col(int	z)
+{
+	if (z <= 1)
+		return (0x000c66f7);
+	else if (z <= 3)
+		return (0xe005ff42);
+	else if (z <= 10)
+		return (0x000da519);
+	else if (z <= 30)
+		return (0x00704f08);
+	else
+		return (0x00e0e0e0);
+}
+
 void        dump_lines(t_render *render, int y, int to)
 {
 	t_point     	**vec;
 	int         	x;
 	t_point			*o;
-	unsigned int	color = 0x00FFFFFF;
 
 	y--;
 	o = &render->origin;
@@ -95,15 +110,15 @@ void        dump_lines(t_render *render, int y, int to)
 		x = -1;
 		while (++x < render->map->width - 1)
 		{
-			put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y] + x + 1)->x, o->y + (vec[y] + x + 1)->y }, color);
-			put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y + 1] + x)->x, o->y + (vec[y + 1] + x)->y }, color);
+			put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y] + x + 1)->x, o->y + (vec[y] + x + 1)->y }, get_col(render->map->data[y][x].z / render->map->scale));
+			put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y + 1] + x)->x, o->y + (vec[y + 1] + x)->y }, get_col(render->map->data[y][x].z / render->map->scale));
 		}
-		put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y + 1] + x)->x, o->y + (vec[y + 1] + x)->y }, color);
+		put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y + 1] + x)->x, o->y + (vec[y + 1] + x)->y }, get_col(render->map->data[y][x].z / render->map->scale));
 	}
 	x = -1;
 	while (++x < render->map->width - 1)
 	{
-		put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y] + x + 1)->x, o->y + (vec[y] + x + 1)->y }, color);
+		put_line(render->pixs, (int[4]){ o->x + (vec[y] + x)->x, o->y + (vec[y] + x)->y, o->x + (vec[y] + x + 1)->x, o->y + (vec[y] + x + 1)->y }, get_col(render->map->data[y][x].z / render->map->scale));
 		
 	}
 }
@@ -122,8 +137,9 @@ t_render    *render_init(t_map *map)
 	render->map = map;
 	render->mlx = mlx_init();
 	render->win = mlx_new_window(render->mlx, WIN_WIDTH, WIN_HEIGHT, "fdf");
-	mlx_key_hook(render->win, key_event, render);	
-	mlx_mouse_hook(render->win, key_event, render);	
+	mlx_key_hook(render->win, key_event, render);
+	mlx_hook(render->win, 2, 0, key_event, render);
+	//mlx_mouse_hook(render->win, key_event, render);	
 	mlx_hook(render->win, 0, 0, mouse_event, render);
 	if (!(render->img = mlx_new_image(render->mlx, WIN_WIDTH, WIN_HEIGHT)))
 	{

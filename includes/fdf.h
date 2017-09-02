@@ -5,14 +5,15 @@
 # include "structs.h"
 # include "vector.h"
 
-# define WIN_WIDTH  1024
-# define WIN_HEIGHT 720
+# define WIN_WIDTH  1900
+# define WIN_HEIGHT 1320
 
 # define F_UPROT    0x0001
 # define F_UPORIGIN 0x0002
 # define F_REFRESH  0x0004
 # define F_OLDREADY 0x0010
 
+# define HEIGHT_VEL 1.5
 # define SCALE_VEL  1.5
 # define SCALE_VEL_OUT  0.5
 # define MOVE_VEL   10
@@ -39,6 +40,7 @@ t_map   *fdf_parse(int fd);
 ** SDL2 render engine
 */
 
+void		get_limits(t_render *r);
 t_render	*render_get();
 void		scale_def(t_map *map);
 int			render_apply(t_render *render);

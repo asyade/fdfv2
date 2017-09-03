@@ -44,8 +44,9 @@ t_map   	*fdf_parse(int fd)
 	int		y;
 	int		size;
 	t_vec3	**tmp;	
+	t_point	**tmp2;	
 
-	size = 4096;
+	size = 1024;
 	map = ft_memalloc(sizeof(t_map));
 	line = NULL;
 	lsize = 0;
@@ -55,12 +56,23 @@ t_map   	*fdf_parse(int fd)
 	map->old = ft_memalloc(sizeof(t_point **) * size);
 	while (get_next_line(fd, &line))
 	{
-		if (y > size)
+		if (y > size - 1)
 		{
 			tmp = ft_memalloc(sizeof(t_vec3 **) * (size * 2));
-			ft_memcpy(tmp, map->data, size);
+			ft_memcpy(tmp, map->data, sizeof(t_vec3 **) * (size * 2));
 			free(map->data);
 			map->data = tmp;
+			
+			tmp2 = ft_memalloc(sizeof(t_vec3 **) * (size * 2));
+			ft_memcpy(tmp2, map->old, sizeof(t_point **) * (size * 2));
+			free(map->old);
+			map->old = tmp2;
+			
+			tmp2 = ft_memalloc(sizeof(t_vec3 **) * (size * 2));
+			ft_memcpy(tmp2, map->done, sizeof(t_point **) * (size * 2));
+			free(map->done);
+			map->done = tmp2;
+			
 			size *= 2;
 		}
 		lsize = (!lsize) ? get_width(line) : lsize;

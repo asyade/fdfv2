@@ -16,17 +16,18 @@ SRC = srcs/main.c \
 	  srcs/render/render_loop.c \
 	  srcs/render/draw.c \
 	  srcs/render/hooks.c \
+	  srcs/render/render_utils.c \
 	  srcs/vector/vec.c \
 	  srcs/vector/quaternion.c \
 	  srcs/vector/projection.c \
 
 OBJ = $(patsubst $(PATH_SRC)/%.c, obj/%.o, $(SRC))
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -O3
 
 LIBS = -L./libft -lft
 
-HEADERS = -I includes/ -I libft/includes -L./minilibx -lmlx -I./minilibx -lm -lpthread -framework AppKit -framework cocoa -framework openGL
+HEADERS = -I includes/ -I libft/includes -I minilibx/ -L./minilibx -lmlx -lXext -lX11 -lm -lpthread
  
 DEPTHS = Makefile includes/vector.h includes/structs.h includes/fdf.h libft/includes/libft.h
 
@@ -41,7 +42,7 @@ $(NAME) : $(OBJ)
 
 obj/%.o : $(PATH_SRC)/%.c $(DEPTHS)
 	mkdir -p $(DIRS)
-	$(CC) -c $< -o $@ $(FLAGS) $(HEADERS) 
+	$(CC) -c $< -o $@ $(HEADERS) $(FLAGS)
 	echo "\033[33mCompiling \033[32m[✔] \033[0m$<"
 
 .PHONY : clean fclean

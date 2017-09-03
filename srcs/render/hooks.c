@@ -2,14 +2,10 @@
 
 int    key_scale(int key, t_render *r)
 {
-    if (key == 69)
+    if (key == 4)
         apply_scale(r->map, SCALE_VEL);
-    else if (key == 78)
+    else if (key == 5)
         apply_scale(r->map, SCALE_VEL_OUT);
-    else if (key == 115)
-        apply_height(r->map, HEIGHT_VEL);
-    else if (key == 119)
-        apply_height(r->map, HEIGHT_VEL);
     else
         return (0);
     return (1);
@@ -17,19 +13,18 @@ int    key_scale(int key, t_render *r)
 
 int    key_move(int key, t_render *r)
 {
+    (void)r;
     int vel;
 
     vel = WIN_WIDTH / ((r->map->width + r->map->height) / 4);
-    if (key == 123)//left
+    if (key == 65361)//left
         r->origin.x += vel;
-    else if (key == 124)//right
+    else if (key == 65363)//right
         r->origin.x -= vel;
-    else if (key == 126)//up
+    else if (key == 65362)//up
         r->origin.y += vel;
-    else if (key == 125)//down
+    else if (key == 65364)//down
         r->origin.y -= vel;
-    else if (key == 53)
-        r->fill = (r->fill) ? 0 : 1;
     else
         return (key_scale(key, r));
     return (1);
@@ -39,22 +34,21 @@ int     key_event(int key, void *p)
 {
     t_render    *render;
 
-    printf("key %d\n", key);
     (void)p;
     render = render_get();
-    if (key == 53)
+    if (key == 65307)
         render_stop(&render);
-    else if (key == 91)//up
+    else if (key == 65431)//up
         render->rot.rot.x += ROT_VEL;
-    else if (key == 84)//down
+    else if (key == 65433)//down
         render->rot.rot.x -= ROT_VEL;
-    else if (key == 86)
+    else if (key == 65430)
         render->rot.rot.y -= ROT_VEL;
-    else if (key == 88)
+    else if (key == 65432)
         render->rot.rot.y += ROT_VEL;
-    else if (key == 89)
+    else if (key == 65429)
         render->rot.rot.z += ROT_VEL;
-    else if (key == 92)
+    else if (key == 65434)
         render->rot.rot.z -= ROT_VEL;
     else if (!key_move(key, render))
         return (0);

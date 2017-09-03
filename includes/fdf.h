@@ -40,6 +40,7 @@ t_map   *fdf_parse(int fd);
 ** SDL2 render engine
 */
 
+int         get_col(int z);
 void		get_limits(t_render *r);
 t_render	*render_get();
 void		scale_def(t_map *map);
